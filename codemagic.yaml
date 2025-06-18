@@ -1,0 +1,28 @@
+workflows:
+  tvos-workflow:
+    name: tvOS App Build
+    max_build_duration: 60
+    instance_type: mac_mini_m1
+    environment:
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Build tvOS App
+        script: |
+          cd StreamingApp
+          xcodebuild -project StreamingApp.xcodeproj \
+                     -scheme StreamingApp \
+                     -destination 'generic/platform=tvOS' \
+                     -configuration Release \
+                     archive -archivePath build/StreamingApp.xcarchive
+          
+          xcodebuild -exportArchive \
+                     -archivePath build/StreamingApp.xcarchive \
+                     -exportPath build \
+                     -exportOptionsPlist ExportOptions.plist
+    artifacts:
+      - build/*.ipa
+    publishing:
+      email:
+        recipients:
+          - your-email@example.com

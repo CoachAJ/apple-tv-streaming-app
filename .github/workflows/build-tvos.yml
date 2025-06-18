@@ -1,0 +1,53 @@
+name: Build tvOS App
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: latest-stable
+    
+    - name: Build for tvOS Simulator
+      run: |
+        cd StreamingApp
+        xcodebuild -project StreamingApp.xcodeproj \
+                   -scheme StreamingApp \
+                   -destination 'platform=tvOS Simulator,name=Apple TV' \
+                   -configuration Debug \
+                   build
+    
+    - name: Create Archive
+      run: |
+        cd StreamingApp
+        xcodebuild -project StreamingApp.xcodeproj \
+                   -scheme StreamingApp \
+                   -destination 'generic/platform=tvOS' \
+                   -configuration Release \
+                   archive -archivePath StreamingApp.xcarchive
+    
+    - name: Export IPA
+      run: |
+        cd StreamingApp
+        xcodebuild -exportArchive \
+                   -archivePath StreamingApp.xcarchive \
+                   -exportPath . \
+                   -exportOptionsPlist ExportOptions.plist
+    
+    - name: Upload IPA Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: StreamingApp-tvOS
+        path: StreamingApp/*.ipa
+        retention-days: 30
