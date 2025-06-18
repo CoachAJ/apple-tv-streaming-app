@@ -1,0 +1,32 @@
+workflows:
+  simple-tvos:
+    name: Simple tvOS Build
+    instance_type: mac_mini_m1
+    max_build_duration: 30
+    environment:
+      xcode: latest
+    scripts:
+      - name: List project info
+        script: |
+          echo "Project files:"
+          ls -la
+          echo "Xcode project:"
+          xcodebuild -project StreamingApp.xcodeproj -list
+      - name: Build tvOS app
+        script: |
+          xcodebuild -project StreamingApp.xcodeproj \
+                     -scheme StreamingApp \
+                     -sdk appletvsimulator \
+                     -configuration Debug \
+                     clean build \
+                     CODE_SIGN_IDENTITY="" \
+                     CODE_SIGNING_REQUIRED=NO
+    artifacts:
+      - StreamingApp.app
+    publishing:
+      email:
+        recipients:
+          - sportsnutrition.nyc@gmail.com
+        notify:
+          success: true
+          failure: true
