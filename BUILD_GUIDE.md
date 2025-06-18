@@ -4,6 +4,14 @@
 
 **Exit Code 66** typically indicates Xcode build configuration issues. I've fixed the GitHub Actions workflow to resolve common problems.
 
+**Exit Code 74** indicates missing Xcode scheme files. I've added the required scheme file to resolve this issue.
+
+### ✅ Fixed Issues:
+- **Exit Code 66**: Incorrect project paths and signing requirements
+- **Exit Code 74**: Missing Xcode scheme file (`StreamingApp.xcscheme`)
+- **Build Configuration**: Updated GitHub Actions workflow
+- **Project Structure**: Added proper scheme configuration
+
 ## Build Options for LambdaTest
 
 ### Option 1: Codemagic (Recommended for IPA Generation) 🥇
@@ -107,6 +115,7 @@ chmod +x build_for_testing.sh
 - `build_for_testing.sh` - Local Mac build script
 - `build_for_testing.ps1` - Windows helper script
 - `StreamingApp/ExportOptions.plist` - Export settings
+- `StreamingApp.xcscheme` - Xcode scheme file
 
 ### 🔧 Configuration Notes:
 - **Team ID**: Set to placeholder, update in Codemagic settings
@@ -145,6 +154,7 @@ apple-tv-streaming-app/
 ├── build_for_testing.sh               # 💻 Local Mac builds
 ├── build_for_testing.ps1              # 🪟 Windows helper
 ├── StreamingApp/ExportOptions.plist    # ⚙️ Export configuration
+├── StreamingApp.xcscheme               # ✅ Added Xcode scheme file
 └── [source code and documentation]    # 📱 Complete app
 ```
 
