@@ -4,7 +4,6 @@ workflows:
     instance_type: mac_mini_m1
     max_build_duration: 60
     environment:
-      flutter: false
       xcode: latest
       cocoapods: default
     triggering:
@@ -25,7 +24,6 @@ workflows:
           find . -name "*.xcodeproj" -type d
           echo "=== Available Schemes ==="
           xcodebuild -project StreamingApp.xcodeproj -list
-      
       - name: Build tvOS App for Simulator
         script: |
           xcodebuild -project StreamingApp.xcodeproj \
@@ -36,7 +34,6 @@ workflows:
                      clean build \
                      CODE_SIGN_IDENTITY="" \
                      CODE_SIGNING_REQUIRED=NO
-      
       - name: Archive tvOS App
         script: |
           xcodebuild -project StreamingApp.xcodeproj \
@@ -48,19 +45,16 @@ workflows:
                      CODE_SIGN_IDENTITY="" \
                      CODE_SIGNING_REQUIRED=NO \
                      DEVELOPMENT_TEAM=""
-      
       - name: Export IPA
         script: |
           xcodebuild -exportArchive \
                      -archivePath $CM_BUILD_DIR/StreamingApp.xcarchive \
                      -exportPath $CM_BUILD_DIR/export \
                      -exportOptionsPlist StreamingApp/ExportOptions.plist
-    
     artifacts:
       - $CM_BUILD_DIR/export/*.ipa
       - $CM_BUILD_DIR/StreamingApp.xcarchive
       - StreamingApp.app
-    
     publishing:
       email:
         recipients:
